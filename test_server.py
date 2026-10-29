@@ -80,3 +80,8 @@ def test_un_recurso():
 
 def test_un_prompt():
     assert len(asyncio.run(_con_cliente(lambda c: c.list_prompts()))) >= 1
+
+
+def test_filtrar_y_desagregar_por_lo_mismo():
+    r = llamar("ejecucion", anio=2026, desagregar_por="pliego", nivel="E", sector="11", pliego="011")
+    assert [f["codigo"] for f in r["filas"]] == ["011"]   # solo el Minsa, no todo el sector

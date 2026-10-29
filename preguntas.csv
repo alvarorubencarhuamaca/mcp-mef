@@ -1,0 +1,11 @@
+id,pregunta,verdad,tolerancia,consulta,anio
+pia_nac_26,"Según Consulta Amigable del MEF, ¿cuál es el PIA (Presupuesto Institucional de Apertura) 2026 del Gobierno Nacional, en millones de soles?",162305.2,1,nivel=E,2026
+pia_loc_26,"Según Consulta Amigable del MEF, ¿cuál es el PIA 2026 de los Gobiernos Locales, en millones de soles?",35795.7,1,nivel=M,2026
+pia_reg_26,"Según Consulta Amigable del MEF, ¿cuál es el PIA 2026 de los Gobiernos Regionales, en millones de soles?",59460.8,1,nivel=R,2026
+pia_total_26,"Según Consulta Amigable del MEF, ¿cuál es el PIA 2026 total de los tres niveles de gobierno (nacional + regional + local), en millones de soles?",257561.6,1,todos los niveles,2026
+pia_minsa_26,"Según Consulta Amigable del MEF, ¿cuál es el PIA 2026 del pliego Ministerio de Salud (sector 11, pliego 011), en millones de soles?",11396.6,1,nivel=E sector=11 pliego=011,2026
+pim_nac_25,"Según Consulta Amigable del MEF, ¿cuál fue el PIM (Presupuesto Institucional Modificado) 2025 del Gobierno Nacional, en millones de soles?",157330.8,1,nivel=E,2025
+pim_loc_25,"Según Consulta Amigable del MEF, ¿cuál fue el PIM 2025 de los Gobiernos Locales, en millones de soles?",53613.3,1,nivel=M,2025
+pim_reg_25,"Según Consulta Amigable del MEF, ¿cuál fue el PIM 2025 de los Gobiernos Regionales, en millones de soles?",61506.7,1,nivel=R,2025
+avance_nac_25,"Según Consulta Amigable del MEF, ¿cuál fue el avance de ejecución (devengado / PIM) del Gobierno Nacional al cierre de 2025, en %?",95.9,0.1,nivel=E,2025
+avance_loc_25,"Según Consulta Amigable del MEF, ¿cuál fue el avance de ejecución (devengado / PIM) de los Gobiernos Locales al cierre de 2025, en %?",80.6,0.1,nivel=M,2025

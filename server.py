@@ -38,6 +38,21 @@ def _filtros(**dados):
     return tuple((d, v) for d in DIMENSIONES if (v := dados.get(d)))
 
 
+def _tabla(anio, desagregar_por, dados):
+    """Consulta al MEF. Si se filtra y desagrega por lo mismo (pliego="011" y desagregar_por="pliego"),
+    pide la tabla sin ese filtro y se queda solo con esa fila: en la URL ambos usan el mismo parámetro."""
+    if desagregar_por not in DIMENSIONES:
+        raise ToolError(f"desagregar_por debe ser uno de {list(DIMENSIONES)}, no {desagregar_por!r}.")
+    dados = dict(dados)
+    misma = dados.pop(desagregar_por, None)
+    df, fuente = _consultar(anio, desagregar_por, _filtros(**dados))
+    if misma:
+        df = df[df["codigo"] == misma]
+        if df.empty:
+            raise ToolError(f"No hay {desagregar_por} {misma!r} con esos filtros. Búsquenlo con buscar_entidades.")
+    return df, fuente
+
+
 @cache
 def _consultar(anio: int, desagregar_por: str, filtros: tuple) -> tuple[pd.DataFrame, str]:
     """Pide una tabla al MEF. filtros = (("nivel", "E"), ("sector", "10")). Se guarda en caché."""
@@ -72,11 +87,9 @@ def ejecucion(anio: int, desagregar_por: str, nivel: str | None = None, sector: 
     Ejemplo: ejecucion(2026, "pliego", nivel="E", sector="10") = los pliegos del sector Educación.
     Si filtras por pliego, pasa también su sector: el mismo código de pliego se repite en varios sectores.
     """
-    if desagregar_por not in DIMENSIONES:
-        raise ToolError(f"desagregar_por debe ser uno de {list(DIMENSIONES)}, no {desagregar_por!r}.")
-    filtros = _filtros(nivel=nivel, sector=sector, pliego=pliego, departamento=departamento, generica=generica)
-    df, fuente = _consultar(anio, desagregar_por, filtros)
-    return {"anio": anio, "filtros": dict(filtros), "desagregado_por": desagregar_por,
+    dados = dict(nivel=nivel, sector=sector, pliego=pliego, departamento=departamento, generica=generica)
+    df, fuente = _tabla(anio, desagregar_por, dados)
+    return {"anio": anio, "filtros": {k: v for k, v in dados.items() if v}, "desagregado_por": desagregar_por,
             "filas": df.to_dict("records"), "fuente": fuente}
 
 
@@ -109,8 +122,8 @@ def resumen(anio: int, desagregar_por: str, nivel: str | None = None, sector: st
     las 3 filas con más PIM y las de mayor y menor avance. Mismos argumentos que ejecucion.
     Ejemplo: resumen(2026, "departamento", nivel="R") = qué región gasta más rápido y cuál más lento.
     """
-    df, fuente = _consultar(anio, desagregar_por, _filtros(nivel=nivel, sector=sector, pliego=pliego,
-                                                          departamento=departamento))
+    df, fuente = _tabla(anio, desagregar_por, dict(nivel=nivel, sector=sector, pliego=pliego,
+                                                   departamento=departamento))
     con_pim = df[df["pim"] > 0]
     fila = lambda r: {"codigo": r["codigo"], "nombre": r["nombre"], "pim": int(r["pim"]),
                       "avance_pct": float(r["avance_pct"])}
